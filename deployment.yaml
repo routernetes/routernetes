@@ -16,14 +16,17 @@ spec:
         app: r9s
     spec:
       hostNetwork: true
-      privileged: true
       containers:
         - name: firewalld
           image: quay.io/firewalld/firewalld:1.1.1
           command: ["firewalld", "--nofork", "--nopid"]
+          securityContext:
+            privileged: true
           volumeMounts:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
+        - name: dnsmasq
+          image: quay.io/routernetes/dnsmasq:latest
       volumes:
         - name: dbus-socket
           hostPath:
