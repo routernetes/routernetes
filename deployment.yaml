@@ -19,16 +19,17 @@ spec:
       containers:
         - name: firewalld
           image: quay.io/firewalld/firewalld:1.1.1
-          command: ["firewalld", "--nofork", "--nopid"]
+          command: ["firewalld"]
+          args: ["--nofork", "--nopid"]
           securityContext:
             privileged: true
           volumeMounts:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
-        - name: dnsmasq
-          image: quay.io/routernetes/dnsmasq:latest
+#        - name: dnsmasq
+#          image: quay.io/routernetes/dnsmasq:latest
       volumes:
         - name: dbus-socket
           hostPath:
             path: /run/dbus/system_bus_socket
-            type: File
+            type: Socket

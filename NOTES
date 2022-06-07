@@ -1,0 +1,1 @@
+copy https://raw.githubusercontent.com/firewalld/firewalld/master/config/FirewallD.conf to /etc/dbus-1/system.d
