@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: r9s-deployment
+  namespace: routernetes
+  labels:
+    app: r9s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: r9s
+  template:
+    metadata:
+      labels:
+        app: r9s
+    spec:
+      hostNetwork: true
+      privileged: true
+      containers:
+        - name: firewalld
+          image: quay.io/firewalld/firewalld:1.1.1
+          command: ["firewalld", "--nofork", "--nopid"]
+          volumeMounts:
+            - mountPath: /run/dbus/system_bus_socket
+              name: dbus-socket
+      volumes:
+        - name: dbus-socket
+          hostPath:
+            path: /run/dbus/system_bus_socket
+            type: File
