@@ -19,18 +19,16 @@ spec:
         - name: dbus-setup
           image: quay.io/routernetes/routernetes:latest
           command: ["ansible-playbook"]
-          args: ["/copy-files.yaml", "--check"]
+          args: ["/playbook/copy-files.yaml", "--check"]
           securityContext:
             privileged: true
           volumeMounts:
-            - name: dbus-config
-              mountPath: /FirewallD.conf
-              subPath: FirewallD.conf
-            - mountPath: /etc/dbus-1/system.d/FirewallD.conf
-              name: firewalld-conf
             - name: ansible-playbook
-              mountPath: /copy-files.yaml
-              subPath: copy-files.yaml
+              mountPath: /playbook
+            - mountPath: /FirewallD.conf
+              name: firewalld-conf
+            - mountPath: /zincati.toml
+              name: zincati-conf
       containers:
         - name: firewalld
           image: quay.io/routernetes/routernetes:latest
@@ -67,12 +65,13 @@ spec:
           hostPath:
             path: /etc/dbus-1/system.d/FirewallD.conf
             type: FileOrCreate
+        - name: zincati-conf
+          hostPath:
+            path: /etc/zincati/config.d/55-updates-strategy.toml
+            type: FileOrCreate
         - name: dnsmasq-config
           configMap:
             name: dnsmasq-config
-        - name: dbus-config
-          configMap:
-            name: dbus-config
         - name: ansible-playbook
           configMap:
             name: ansible-playbook

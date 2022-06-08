@@ -11,8 +11,54 @@ data:
       tasks:
         - name: Copy FirewallD.conf
           ansible.builtin.copy:
-            src: /FirewallD.conf
-            dest: /etc/dbus-1/system.d/FirewallD.conf
+            src: /playbook/FirewallD.conf
+            dest: /FirewallD.conf
             owner: root
             group: root
             mode: '0644'
+        - name: 55-updates-strategy.toml
+          ansible.builtin.copy:
+            src: /playbook/55-updates-strategy.toml
+            dest: /zincati.toml
+            owner: root
+            group: root
+            mode: '0644'
+  55-updates-strategy.toml: |
+    [updates]
+    strategy = "periodic"
+
+    [updates.periodic]
+    time_zone = "America/Edmonton"
+
+    [[updates.periodic.window]]
+    days = [ "Sun" ]
+    start_time = "04:00"
+    length_minutes = 60
+  FirewallD.conf: |
+    <?xml version="1.0" encoding="UTF-8"?> <!-- -*- XML -*- -->
+
+    <!DOCTYPE busconfig PUBLIC
+    "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
+    "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+    <busconfig>
+
+      <!-- Only root can own the service and send signals -->
+      <policy user="root">
+        <allow own="org.fedoraproject.FirewallD1"/>
+        <allow own="org.fedoraproject.FirewallD1.config"/>
+        <allow send_destination="org.fedoraproject.FirewallD1"/>
+        <allow send_destination="org.fedoraproject.FirewallD1.config"/>
+      </policy>
+
+      <!-- Allow anyone to invoke methods on the interfaces,
+          authorization is performed by PolicyKit -->
+      <policy context="default">
+        <allow send_destination="org.fedoraproject.FirewallD1"/>
+        <allow send_destination="org.fedoraproject.FirewallD1"
+              send_interface="org.freedesktop.DBus.Introspectable"/>
+        <allow send_destination="org.fedoraproject.FirewallD1"
+              send_interface="org.freedesktop.DBus.Properties"/>
+        <allow send_destination="org.fedoraproject.FirewallD1.config"/>
+      </policy>
+
+    </busconfig>
