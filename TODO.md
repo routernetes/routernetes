@@ -1,4 +1,4 @@
-- Use ignition for host setup rather than ansible init
+- Use ignition for host setup
   - interface config
   - zincati config
   - dbus config
