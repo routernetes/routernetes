@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ansible-playbook
+  namespace: routernetes
+data:
+  copy-files.yaml: |
+    - name: "Configure Host"
+      hosts: localhost
+      connection: local
+      tasks:
+        - ansible.builtin.copy:
+          src: /FirewallD.conf
+          dest: /etc/dbus-1/system.d/FirewallD.conf
+          owner: root
+          group: root
+          mode: '0644'

@@ -4,7 +4,6 @@
 - Use NMState for interface config
 - Setup liveness probes
 - Use Ansible init container to deploy needed files:
-  - /etc/dbus-1/system.d/FirewallD.conf
   - /etc/zincati/config.d/55-updates-strategy.toml
 - Develop operator
 - blog

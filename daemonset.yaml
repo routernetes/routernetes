@@ -15,6 +15,22 @@ spec:
         app: r9s
     spec:
       hostNetwork: true
+      initContainers:
+        - name: dbus-setup
+          image: quay.io/routernetes/routernetes:latest
+          command: ["ansible-playbook"]
+          args: ["/copy-files.yaml", "--check"]
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: dbus-config
+              mountPath: /FirewallD.conf
+              subPath: FirewallD.conf
+            - mountPath: /etc/dbus-1/system.d/FirewallD.conf
+              name: firewalld-conf
+            - name: ansible-playbook
+              mountPath: /copy-files.yaml
+              subPath: copy-files.yaml
       containers:
         - name: firewalld
           image: quay.io/routernetes/routernetes:latest
@@ -47,6 +63,16 @@ spec:
           hostPath:
             path: /run/dbus/system_bus_socket
             type: Socket
+        - name: firewalld-conf
+          hostPath:
+            path: /etc/dbus-1/system.d/FirewallD.conf
+            type: FileOrCreate
         - name: dnsmasq-config
           configMap:
             name: dnsmasq-config
+        - name: dbus-config
+          configMap:
+            name: dbus-config
+        - name: ansible-playbook
+          configMap:
+            name: ansible-playbook
