@@ -1,7 +1,8 @@
+- Use ignition for host setup rather than ansible init
+  - interface config
+  - zincati config
+  - dbus config
 - Finish firewalld setup
-- Figure out how to only expose k8s API on the internal interface
-- Use NMState for interface config
-- Setup zincati config
 - Setup liveness probes
 - Develop operator
 - blog
