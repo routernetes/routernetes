@@ -1,0 +1,9 @@
+- Finish firewalld setup
+- Figure out how to only expose k8s API on the internal interface
+- Don't run dnsmasq in a hostNetwork pod, use k8s services
+- Use NMState for interface config
+- Use Machine Config Operator to deploy needed files:
+  - /etc/dbus-1/system.d/FirewallD.conf
+  - /etc/zincati/config.d/55-updates-strategy.toml
+- Develop operator
+- blog
