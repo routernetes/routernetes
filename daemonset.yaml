@@ -25,6 +25,8 @@ spec:
           volumeMounts:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
+            - name: firewalld-config
+              mountPath: /etc/firewalld/zones
         - name: dnsmasq
           image: quay.io/routernetes/routernetes:latest
           command: ["dnsmasq"]
@@ -52,3 +54,6 @@ spec:
         - name: dnsmasq-config
           configMap:
             name: dnsmasq-config
+        - name: firewalld-config
+          configMap:
+            name: firewalld-config

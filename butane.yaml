@@ -24,6 +24,7 @@ systemd:
         RemainAfterExit=yes
         ExecStart=/usr/bin/rpm-ostree install --apply-live firewalld https://github.com/k3s-io/k3s-selinux/releases/download/v1.1.stable.1/k3s-selinux-1.1-1.el8.noarch.rpm
         ExecStart=/usr/bin/systemctl disable --now firewalld
+        ExecStart=/usr/bin/systemctl mask firewalld
         ExecStart=/usr/bin/systemctl restart dbus
         ExecStart=/bin/touch /var/lib/%N.stamp
 

@@ -1,3 +1,3 @@
-- Finish firewalld setup
 - Develop operator
 - https://rancher.com/docs/k3s/latest/en/upgrades/automated/
+- Reduce container privs at much as possible

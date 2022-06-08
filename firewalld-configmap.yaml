@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: firewalld-config
+  namespace: routernetes
+data:
+  r9s-external.xml: |
+    <?xml version="1.0" encoding="utf-8"?>
+    <zone>
+      <service name="ssh"/>
+      <masquerade/>
+      <interface name="eno1"/>
+      <forward/>
+    </zone>
+  r9s-internal.xml: |
+    <?xml version="1.0" encoding="utf-8"?>
+    <zone>
+      <interface name="enp0s20u1"/>
+      <forward/>
+    </zone>
