@@ -5,5 +5,6 @@
 - Use Machine Config Operator to deploy needed files:
   - /etc/dbus-1/system.d/FirewallD.conf
   - /etc/zincati/config.d/55-updates-strategy.toml
+  - If using MCO isn't feasible, maybe use an init container that mounts those locations as a hostPath and overwrites them?
 - Develop operator
 - blog
