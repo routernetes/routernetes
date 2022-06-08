@@ -9,9 +9,10 @@ data:
       hosts: localhost
       connection: local
       tasks:
-        - ansible.builtin.copy:
-          src: /FirewallD.conf
-          dest: /etc/dbus-1/system.d/FirewallD.conf
-          owner: root
-          group: root
-          mode: '0644'
+        - name: Copy FirewallD.conf
+          ansible.builtin.copy:
+            src: /FirewallD.conf
+            dest: /etc/dbus-1/system.d/FirewallD.conf
+            owner: root
+            group: root
+            mode: '0644'
