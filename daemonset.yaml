@@ -36,7 +36,8 @@ spec:
           command: ["dnsmasq"]
           args: ["-k"]
           securityContext:
-            privileged: true
+            capabilities:
+              add: ["NET_ADMIN"]
           ports:
             - name: dns-port
               containerPort: 53
