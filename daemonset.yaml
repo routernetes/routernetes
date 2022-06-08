@@ -26,7 +26,11 @@ spec:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
             - name: firewalld-config
-              mountPath: /etc/firewalld/zones
+              mountPath: /etc/firewalld/zones/r9s-external.xml
+              subPath: r9s-external.xml
+            - name: firewalld-config
+              mountPath: /etc/firewalld/zones/r9s-internal.xml
+              subPath: r9s-internal.xml
         - name: dnsmasq
           image: quay.io/routernetes/routernetes:latest
           command: ["dnsmasq"]
