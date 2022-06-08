@@ -3,6 +3,5 @@
   - zincati config
   - dbus config
 - Finish firewalld setup
-- Setup liveness probes
 - Develop operator
 - blog
