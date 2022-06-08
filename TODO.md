@@ -5,4 +5,3 @@
   - k3s install
 - Finish firewalld setup
 - Develop operator
-- blog
