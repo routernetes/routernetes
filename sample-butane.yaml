@@ -42,6 +42,7 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
+        ExecStart=/usr/bin/systemctl start NetworkManager
         ExecStart=/usr/bin/nmcli connection up enp0s20u1
         ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=enp0s20u1'
 
@@ -62,9 +63,21 @@ storage:
           id=enp0s20u1
           type=ethernet
           interface-name=enp0s20u1
+          zone=r9s-internal
           [ipv4]
           address1=10.0.0.1/24
           method=manual
+    - path: /etc/NetworkManager/system-connections/eno1.nmconnection
+      mode: 0600
+      contents:
+        inline: |
+          [connection]
+          id=eno1
+          type=ethernet
+          interface-name=eno1
+          zone=r9s-external
+          [ipv4]
+          method=auto
     - path: /etc/zincati/config.d/55-updates-strategy.toml
       contents:
         inline: |
