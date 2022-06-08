@@ -16,24 +16,6 @@ data:
             owner: root
             group: root
             mode: '0644'
-        - name: 55-updates-strategy.toml
-          ansible.builtin.copy:
-            src: /playbook/55-updates-strategy.toml
-            dest: /zincati.toml
-            owner: root
-            group: root
-            mode: '0644'
-  55-updates-strategy.toml: |
-    [updates]
-    strategy = "periodic"
-
-    [updates.periodic]
-    time_zone = "America/Edmonton"
-
-    [[updates.periodic.window]]
-    days = [ "Sun" ]
-    start_time = "04:00"
-    length_minutes = 60
   FirewallD.conf: |
     <?xml version="1.0" encoding="UTF-8"?> <!-- -*- XML -*- -->
 

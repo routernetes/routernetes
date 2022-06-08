@@ -27,8 +27,6 @@ spec:
               mountPath: /playbook
             - mountPath: /FirewallD.conf
               name: firewalld-conf
-            - mountPath: /zincati.toml
-              name: zincati-conf
       containers:
         - name: firewalld
           image: quay.io/routernetes/routernetes:latest
@@ -64,10 +62,6 @@ spec:
         - name: firewalld-conf
           hostPath:
             path: /etc/dbus-1/system.d/FirewallD.conf
-            type: FileOrCreate
-        - name: zincati-conf
-          hostPath:
-            path: /etc/zincati/config.d/55-updates-strategy.toml
             type: FileOrCreate
         - name: dnsmasq-config
           configMap:
