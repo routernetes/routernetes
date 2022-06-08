@@ -5,6 +5,28 @@ passwd:
     - name: core
       ssh_authorized_keys:
         - ssh-rsa AAAA...
+systemd:
+  units:
+    - name: rpm-ostree-install-k3s-selinux.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Layer k3s-selinux with rpm-ostree
+        Wants=network-online.target
+        After=network-online.target
+        # We run before `zincati.service` to avoid conflicting rpm-ostree
+        # transactions.
+        Before=zincati.service
+        ConditionPathExists=!/var/lib/%N.stamp
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/usr/bin/rpm-ostree install --apply-live https://github.com/k3s-io/k3s-selinux/releases/download/v1.1.stable.1/k3s-selinux-1.1-1.el8.noarch.rpm
+        ExecStart=/bin/touch /var/lib/%N.stamp
+
+        [Install]
+        WantedBy=multi-user.target
 storage:
   files:
     - path: /etc/hostname
