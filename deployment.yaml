@@ -1,12 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
-  name: r9s-deployment
+  name: r9s-daemonset
   namespace: routernetes
   labels:
     app: r9s
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: r9s
@@ -18,7 +17,7 @@ spec:
       hostNetwork: true
       containers:
         - name: firewalld
-          image: quay.io/firewalld/firewalld:1.1.1
+          image: quay.io/routernetes/routernetes:latest
           command: ["firewalld"]
           args: ["--nofork", "--nopid"]
           securityContext:
@@ -26,8 +25,10 @@ spec:
           volumeMounts:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
-#        - name: dnsmasq
-#          image: quay.io/routernetes/dnsmasq:latest
+        - name: dnsmasq
+          image: quay.io/routernetes/routernetes:latest
+          command: ["dnsmasq"]
+          args: ["-k"]
       volumes:
         - name: dbus-socket
           hostPath:
