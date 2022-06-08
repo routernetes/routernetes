@@ -29,8 +29,24 @@ spec:
           image: quay.io/routernetes/routernetes:latest
           command: ["dnsmasq"]
           args: ["-k"]
+          ports:
+            - name: dns-port
+              containerPort: 53
+              hostPort: 53
+              protocol: UDP
+            - name: dhcp-port
+              containerPort: 67
+              hostPort: 67
+              protocol: UDP
+          volumeMounts:
+            - name: dnsmasq-config
+              mountPath: /etc/dnsmasq.conf
+              subPath: dnsmasq.conf
       volumes:
         - name: dbus-socket
           hostPath:
             path: /run/dbus/system_bus_socket
             type: Socket
+        - name: dnsmasq-config
+          configMap:
+            name: dnsmasq-config
