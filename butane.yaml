@@ -27,6 +27,22 @@ systemd:
 
         [Install]
         WantedBy=multi-user.target
+    - name: install-k3s.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=install k3s
+        Wants=network-online.target
+        After=zincati.service
+        ConditionPathExists=!/var/lib/rancher/k3s
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=enp0s20u1'
+
+        [Install]
+        WantedBy=multi-user.target
 storage:
   files:
     - path: /etc/hostname
