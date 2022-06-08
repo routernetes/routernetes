@@ -29,6 +29,8 @@ spec:
           image: quay.io/routernetes/routernetes:latest
           command: ["dnsmasq"]
           args: ["-k"]
+          securityContext:
+            privileged: true
           ports:
             - name: dns-port
               containerPort: 53

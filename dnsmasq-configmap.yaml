@@ -5,7 +5,8 @@ metadata:
   namespace: routernetes
 data:
   dnsmasq.conf: |
-    listen-address=10.0.0.1
+    bind-interfaces
+    interface=enp0s20u1
     dhcp-range=10.0.0.50,10.0.0.150,255.255.255.0,12h
     dhcp-option=option:router,10.0.0.1
     dhcp-option=option:dns-server,10.0.0.1
