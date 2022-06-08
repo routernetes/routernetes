@@ -1,7 +1,4 @@
 - Use ignition for host setup
-  - interface config
-  - zincati config
-  - dbus config
   - k3s install
 - Finish firewalld setup
 - Develop operator
