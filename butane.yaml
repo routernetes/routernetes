@@ -7,11 +7,11 @@ passwd:
         - ssh-rsa AAAA...
 systemd:
   units:
-    - name: rpm-ostree-install-k3s-selinux.service
+    - name: rpm-ostree-install-deps.service
       enabled: true
       contents: |
         [Unit]
-        Description=Layer k3s-selinux with rpm-ostree
+        Description=Layer dependencies with rpm-ostree
         Wants=network-online.target
         After=network-online.target
         # We run before `zincati.service` to avoid conflicting rpm-ostree
@@ -23,6 +23,7 @@ systemd:
         Type=oneshot
         RemainAfterExit=yes
         ExecStart=/usr/bin/rpm-ostree install --apply-live firewalld https://github.com/k3s-io/k3s-selinux/releases/download/v1.1.stable.1/k3s-selinux-1.1-1.el8.noarch.rpm
+        ExecStart=/usr/bin/systemctl disable --now firewalld
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
