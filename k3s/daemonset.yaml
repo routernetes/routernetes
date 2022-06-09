@@ -44,6 +44,15 @@ spec:
             - name: zincati-host
               mountPath: /host-config.toml
       containers:
+        - name: tuned
+          image: quay.io/routernetes/routernetes:latest
+          command: ["tuned"]
+          args: ["-p", "network-throughput"]
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /run/dbus/system_bus_socket
+              name: dbus-socket
         - name: firewalld
           image: quay.io/routernetes/routernetes:latest
           command: ["firewalld"]
