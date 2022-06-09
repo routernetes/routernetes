@@ -26,6 +26,7 @@ systemd:
         ExecStart=/usr/bin/systemctl disable --now firewalld
         ExecStart=/usr/bin/systemctl mask firewalld
         ExecStart=/usr/bin/systemctl restart dbus
+        ExecStart=/usr/bin/systemctl start NetworkManager
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
@@ -41,9 +42,7 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/usr/bin/systemctl start NetworkManager
-        ExecStart=/usr/bin/nmcli connection up enp0s20u1
-        ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=enp0s20u1'
+        ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw'
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
