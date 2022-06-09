@@ -44,7 +44,7 @@ spec:
           image: quay.io/routernetes/routernetes:latest
           command: ["/bin/bash", "-c"]
           args:
-            - cat /configs/55-updates-strategy.toml > /host-config.toml
+            - cat /configs/55-updates-strategy.toml > /host-config.toml;
               gdbus call --system --dest org.freedesktop.systemd1 --object-path /org/freedesktop/systemd1 --method org.freedesktop.systemd1.Manager.RestartUnit zincati.service replace;
           securityContext:
             privileged: true
