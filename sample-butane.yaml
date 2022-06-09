@@ -26,25 +26,8 @@ systemd:
         ExecStart=/usr/bin/systemctl disable --now firewalld
         ExecStart=/usr/bin/systemctl mask firewalld
         ExecStart=/usr/bin/systemctl restart dbus
-        ExecStart=/bin/touch /var/lib/%N.stamp
-
-        [Install]
-        WantedBy=multi-user.target
-    - name: install-k3s.service
-      enabled: true
-      contents: |
-        [Unit]
-        Description=install k3s
-        Wants=network-online.target
-        After=zincati.service
-        ConditionPathExists=!/var/lib/rancher/k3s
-
-        [Service]
-        Type=oneshot
-        RemainAfterExit=yes
         ExecStart=/usr/bin/systemctl start NetworkManager
-        ExecStart=/usr/bin/nmcli connection up enp0s20u1
-        ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=enp0s20u1'
+        ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
         WantedBy=multi-user.target
@@ -63,7 +46,6 @@ storage:
           id=enp0s20u1
           type=ethernet
           interface-name=enp0s20u1
-          zone=r9s-internal
           [ipv4]
           address1=10.0.0.1/24
           method=manual
@@ -75,7 +57,6 @@ storage:
           id=eno1
           type=ethernet
           interface-name=eno1
-          zone=r9s-external
           [ipv4]
           method=auto
     - path: /etc/zincati/config.d/55-updates-strategy.toml

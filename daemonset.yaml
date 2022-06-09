@@ -1,3 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dhcp-lease-pvc
+  namespace: routernetes
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 512Mi
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -15,6 +28,18 @@ spec:
         app: r9s
     spec:
       hostNetwork: true
+      initContainers:
+        - name: network-setup
+          image: quay.io/routernetes/routernetes:latest
+          command: ["/bin/bash", "-c"]
+          args:
+            - nmcli connection modify eno1 connection.zone r9s-external;
+              nmcli connection modify enp0s20u1 connection.zone r9s-internal;
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /run/dbus/system_bus_socket
+              name: dbus-socket
       containers:
         - name: firewalld
           image: quay.io/routernetes/routernetes:latest
@@ -34,7 +59,7 @@ spec:
         - name: dnsmasq
           image: quay.io/routernetes/routernetes:latest
           command: ["dnsmasq"]
-          args: ["-k"]
+          args: ["-k", "-l", "/leases/db"]
           securityContext:
             capabilities:
               add: ["NET_ADMIN"]
@@ -51,7 +76,12 @@ spec:
             - name: dnsmasq-config
               mountPath: /etc/dnsmasq.conf
               subPath: dnsmasq.conf
+            - name: dhcp-lease
+              mountPath: /leases
       volumes:
+        - name: dhcp-lease
+          persistentVolumeClaim:
+            claimName: dhcp-lease-pvc
         - name: dbus-socket
           hostPath:
             path: /run/dbus/system_bus_socket
