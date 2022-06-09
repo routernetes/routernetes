@@ -44,6 +44,9 @@ systemd:
         ExecStart=/usr/bin/systemctl start NetworkManager
         ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw -i 127.0.0.1'
         ExecStart=/bin/touch /var/lib/%N.stamp
+
+        [Install]
+        WantedBy=multi-user.target
 storage:
   files:
     - path: /etc/hostname
