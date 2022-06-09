@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sudo k3s kubectl apply -f namespace.yaml
 sudo k3s kubectl apply -f dnsmasq-configmap.yaml
 sudo k3s kubectl apply -f firewalld-configmap.yaml
 sudo k3s kubectl apply -f zincati-configmap.yaml
