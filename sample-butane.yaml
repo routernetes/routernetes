@@ -26,7 +26,6 @@ systemd:
         ExecStart=/usr/bin/systemctl disable --now firewalld
         ExecStart=/usr/bin/systemctl mask firewalld
         ExecStart=/usr/bin/systemctl restart dbus
-        ExecStart=/usr/bin/systemctl start NetworkManager
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
@@ -42,7 +41,9 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw'
+        ExecStart=/usr/bin/systemctl start NetworkManager
+        ExecStart=/usr/bin/nmcli con add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore
+        ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo'
 
         [Install]
         WantedBy=multi-user.target
