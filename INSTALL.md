@@ -1,5 +1,5 @@
 coreos-installer download -f iso
-butane --pretty --strict -o install.ign butane.yaml
+butane --pretty --strict -o config.ign butane.yaml
 coreos-installer iso customize \
     --dest-device /dev/sda \
     --dest-ignition config.ign \
