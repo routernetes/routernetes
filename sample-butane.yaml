@@ -42,7 +42,8 @@ systemd:
         Type=oneshot
         RemainAfterExit=yes
         ExecStart=/usr/bin/systemctl start NetworkManager
-        ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw -i 127.0.0.1'
+        ExecStart=/usr/bin/nmcli connection up enp0s20u1
+        ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=enp0s20u1'
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
