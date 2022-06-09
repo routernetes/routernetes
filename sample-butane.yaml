@@ -26,11 +26,24 @@ systemd:
         ExecStart=/usr/bin/systemctl disable --now firewalld
         ExecStart=/usr/bin/systemctl mask firewalld
         ExecStart=/usr/bin/systemctl restart dbus
-        ExecStart=/usr/bin/systemctl start NetworkManager
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
         WantedBy=multi-user.target
+    - name: install-k3s.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=install k3s
+        Wants=network-online.target
+        After=zincati.service
+        ConditionPathExists=!/var/lib/rancher/k3s
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/usr/bin/systemctl start NetworkManager
+        ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw -i 127.0.0.1'
+        ExecStart=/bin/touch /var/lib/%N.stamp
 storage:
   files:
     - path: /etc/hostname
