@@ -40,6 +40,21 @@ spec:
           volumeMounts:
             - mountPath: /run/dbus/system_bus_socket
               name: dbus-socket
+        - name: zincati-setup
+          image: quay.io/routernetes/routernetes:latest
+          command: ["/bin/bash", "-c"]
+          args:
+            - cat /configs/55-updates-strategy.toml > /host-config.toml
+              gdbus call --system --dest org.freedesktop.systemd1 --object-path /org/freedesktop/systemd1 --method org.freedesktop.systemd1.Manager.RestartUnit zincati.service replace;
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /run/dbus/system_bus_socket
+              name: dbus-socket
+            - name: zincati-config
+              mountPath: /configs
+            - name: zincati-host
+              mountPath: /host-config.toml
       containers:
         - name: firewalld
           image: quay.io/routernetes/routernetes:latest
@@ -86,9 +101,16 @@ spec:
           hostPath:
             path: /run/dbus/system_bus_socket
             type: Socket
+        - name: zincati-host
+          hostPath:
+            path: /etc/zincati/config.d/55-updates-strategy.toml
+            type: FileOrCreate
         - name: dnsmasq-config
           configMap:
             name: dnsmasq-config
         - name: firewalld-config
           configMap:
             name: firewalld-config
+        - name: zincati-config
+          configMap:
+            name: zincati-config

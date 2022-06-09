@@ -76,16 +76,3 @@ storage:
           interface-name=eno1
           [ipv4]
           method=auto
-    - path: /etc/zincati/config.d/55-updates-strategy.toml
-      contents:
-        inline: |
-          [updates]
-          strategy = "periodic"
-
-          [updates.periodic]
-          time_zone = "America/Edmonton"
-
-          [[updates.periodic.window]]
-          days = [ "Sun" ]
-          start_time = "04:00"
-          length_minutes = 60
