@@ -1,0 +1,6 @@
+- VPN support
+- IPv6 support
+- WiFi AP support
+- Multiple internal interfaces
+- Netflow
+- Grafana performance dashboard
