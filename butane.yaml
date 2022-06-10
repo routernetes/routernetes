@@ -3,8 +3,7 @@ version: 1.4.0
 passwd:
   users:
     - name: core
-      ssh_authorized_keys:
-        - ssh-rsa AAAA...
+      password_hash: $y$j9T$56zG0U/m2y3wKgDTvaxC2/$wx0oCcKGS0D8SmgXntmz9kfE/jZSkWwz6oVTdkN2GS9
 systemd:
   units:
     - name: rpm-ostree-install-deps.service
