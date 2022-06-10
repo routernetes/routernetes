@@ -1,3 +1,4 @@
+```
 coreos-installer download -f iso
 butane --pretty --strict -o config.ign butane.yaml
 coreos-installer iso customize \
@@ -5,3 +6,4 @@ coreos-installer iso customize \
     --dest-ignition config.ign \
     -o custom.iso fedora-coreos-36.20220522.3.0-live.x86_64.iso
 rm config.ign
+```
