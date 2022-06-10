@@ -1,3 +1,3 @@
-FROM quay.io/centos/centos:stream9
+FROM registry.fedoraproject.org/fedora-minimal:36
 
-RUN dnf -y update && dnf -y install firewalld tuned dnsmasq NetworkManager && dnf -y clean all
+RUN microdnf -y update && microdnf -y install firewalld tuned dnsmasq NetworkManager && microdnf -y clean all
