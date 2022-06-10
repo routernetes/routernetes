@@ -46,6 +46,11 @@ systemd:
         ExecStart=/usr/bin/systemctl start NetworkManager
         ExecStart=/usr/bin/nmcli con add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore
         ExecStart=/bin/sh -c 'curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo'
+        ExecStart=/usr/bin/sleep 30
+        ExecStart=/usr/local/bin/kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/latest/download/system-upgrade-controller.yaml
+        ExecStart=/usr/local/bin/kubectl wait deployment -n system-upgrade system-upgrade-controller --for condition=Available=True
+        ExecStart=/usr/local/bin/kubectl apply -f https://raw.githubusercontent.com/routernetes/routernetes/main/k3s/upgrade-plan.yaml
+        ExecStart=/usr/local/bin/install-olm.sh
 
         [Install]
         WantedBy=multi-user.target
@@ -56,6 +61,18 @@ storage:
       contents:
         inline: |
           routernetes
+    - path: /usr/local/bin/install-olm.sh
+      mode: 0755
+      contents:
+        inline: |
+          #!/bin/bash
+          export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
+          export OS=$(uname | awk '{print tolower($0)}')
+          export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/download/v1.21.0
+          curl -L -o /usr/local/bin/operater-sdk ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
+          chmod +x /usr/local/bin/operater-sdk
+          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+          /usr/local/bin/operater-sdk olm install
     - path: /etc/NetworkManager/system-connections/enp0s20u1.nmconnection
       mode: 0600
       contents:
