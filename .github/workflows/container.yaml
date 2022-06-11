@@ -1,9 +1,8 @@
 name: Publish container
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -22,7 +21,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: routernetes
-          tags: latest main
+          tags: latest ${{ github.ref_name }}
           containerfiles: |
             ./Containerfile
           platforms: linux/amd64, linux/arm64
