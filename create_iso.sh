@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 coreos-installer download -f iso
 butane --pretty --strict -o config.ign butane.yaml
 coreos-installer iso customize \
