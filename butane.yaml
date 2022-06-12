@@ -91,7 +91,7 @@ storage:
           export interfaces=$(/usr/sbin/ip -details -json addr | /usr/bin/jq '. | map(select((.linkinfo == null) and (.link_type == "ether")))')
           export external=$(echo "$interfaces" | /usr/bin/jq -r '. | map(select(.addr_info[] | (.dynamic == true and .family == "inet")))[0] | .ifname')
           export internal=$(echo "$interfaces" | /usr/bin/jq -r --arg external "$external"  '. | map(select(.ifname != $external))[0] | .ifname')
-          /usr/bin/nmcli connection add con-name r9s-external type ethernet ifname $external ipv4.method auto ipv6.method ignore
-          /usr/bin/nmcli connection up r9s-external
-          /usr/bin/nmcli connection add con-name r9s-internal type ethernet ifname $internal ipv4.method manual ipv4.addresses 10.0.0.1/24 ipv6.method ignore
-          /usr/bin/nmcli connection up r9s-internal
+          /usr/bin/nmcli connection add con-name r9s-outside type ethernet ifname $external ipv4.method auto ipv6.method ignore
+          /usr/bin/nmcli connection up r9s-outside
+          /usr/bin/nmcli connection add con-name r9s-inside type ethernet ifname $internal ipv4.method manual ipv4.addresses 10.0.0.1/24 ipv6.method ignore
+          /usr/bin/nmcli connection up r9s-inside
