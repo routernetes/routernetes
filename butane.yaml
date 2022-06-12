@@ -59,9 +59,7 @@ storage:
         inline: |
           #!/bin/bash
           set -e
-          /usr/bin/systemctl start NetworkManager
-          /usr/bin/nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore
-          /usr/bin/nmcli connection up dummy-k3s-lo;
+          /usr/local/bin/setup-interfaces.sh
           curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo
           /usr/bin/sleep 30
           /usr/local/bin/kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/latest/download/system-upgrade-controller.yaml
@@ -81,24 +79,19 @@ storage:
           chmod +x /usr/local/bin/operator-sdk
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           /usr/local/bin/operator-sdk olm install
-    - path: /etc/NetworkManager/system-connections/enp0s20u1.nmconnection
-      mode: 0600
+    - path: /usr/local/bin/setup-interfaces.sh
+      mode: 0755
       contents:
         inline: |
-          [connection]
-          id=enp0s20u1
-          type=ethernet
-          interface-name=enp0s20u1
-          [ipv4]
-          address1=10.0.0.1/24
-          method=manual
-    - path: /etc/NetworkManager/system-connections/eno1.nmconnection
-      mode: 0600
-      contents:
-        inline: |
-          [connection]
-          id=eno1
-          type=ethernet
-          interface-name=eno1
-          [ipv4]
-          method=auto
+          #!/bin/bash
+          set -e
+          /usr/bin/systemctl start NetworkManager
+          /usr/bin/nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore
+          /usr/bin/nmcli connection up dummy-k3s-lo;
+          export interfaces=$(/usr/sbin/ip -details -json addr | /usr/bin/jq '. | map(select((.linkinfo == null) and (.link_type == "ether")))')
+          export external=$(echo "$interfaces" | /usr/bin/jq -r '. | map(select(.addr_info[] | (.dynamic == true and .family == "inet")))[0] | .ifname')
+          export internal=$(echo "$interfaces" | /usr/bin/jq -r --arg external "$external"  '. | map(select(.ifname != $external))[0] | .ifname')
+          /usr/bin/nmcli connection add con-name r9s-external type ethernet ifname $external ipv4.method auto ipv6.method ignore
+          /usr/bin/nmcli connection up r9s-external
+          /usr/bin/nmcli connection add con-name r9s-internal type ethernet ifname $internal ipv4.method manual ipv4.addresses 10.0.0.1/24 ipv6.method ignore
+          /usr/bin/nmcli connection up r9s-internal
