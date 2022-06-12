@@ -53,6 +53,12 @@ storage:
       contents:
         inline: |
           routernetes
+    - path: /etc/ssh/sshd_config.d/20-enable-passwords.conf
+      mode: 0644
+      contents:
+        inline: |
+          # Enable SSH password login
+          PasswordAuthentication yes
     - path: /usr/local/bin/install-k3s.sh
       mode: 0755
       contents:
