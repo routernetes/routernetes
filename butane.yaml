@@ -26,6 +26,8 @@ systemd:
         ExecStart=/usr/bin/systemctl mask firewalld
         ExecStart=/usr/bin/systemctl disable --now tuned
         ExecStart=/usr/bin/systemctl mask tuned
+        ExecStart=/usr/bin/systemctl disable --now docker
+        ExecStart=/usr/bin/systemctl disable --now docker.socket
         ExecStart=/usr/bin/systemctl restart dbus
         ExecStart=/bin/touch /var/lib/%N.stamp
 
