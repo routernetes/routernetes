@@ -60,7 +60,8 @@ storage:
           #!/bin/bash
           set -e
           /usr/bin/systemctl start NetworkManager
-          /usr/bin/nmcli con add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore
+          /usr/bin/nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore
+          /usr/bin/nmcli connection up dummy-k3s-lo;
           curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo
           /usr/bin/sleep 30
           /usr/local/bin/kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/latest/download/system-upgrade-controller.yaml
