@@ -24,7 +24,7 @@ jobs:
           tags: latest ${{ github.ref_name }}
           context: ./installer
           containerfiles: |
-            ./iso.Containerfile
+            ./installer/iso.Containerfile
           platforms: linux/amd64, linux/arm64
 
       - name: Push To quay.io
