@@ -1,4 +1,4 @@
-name: Publish installer
+name: Publish iso-installer
 
 on:
   release:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-installer:
+  build-iso-installer:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
