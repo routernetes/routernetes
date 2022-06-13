@@ -94,8 +94,8 @@ storage:
           #!/bin/bash
           set -e
           /usr/bin/systemctl start NetworkManager
-          /usr/bin/nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore
-          /usr/bin/nmcli connection up dummy-k3s-lo;
+          /usr/bin/nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore connection.zone r9s-internal
+          /usr/bin/nmcli connection up dummy-k3s-lo
           export interfaces=$(/usr/sbin/ip -details -json addr | /usr/bin/jq '. | map(select((.linkinfo == null) and (.link_type == "ether")))')
           export external=$(echo "$interfaces" | /usr/bin/jq -r '. | map(select(.addr_info[] | (.dynamic == true and .family == "inet")))[0] | .ifname')
           export internal=$(echo "$interfaces" | /usr/bin/jq -r --arg external "$external"  '. | map(select(.ifname != $external))[0] | .ifname')
