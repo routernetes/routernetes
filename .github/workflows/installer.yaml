@@ -22,7 +22,7 @@ jobs:
         with:
           image: create-iso
           tags: latest ${{ github.ref_name }}
-          context: installer
+          context: ./installer
           containerfiles: |
             ./iso.Containerfile
           platforms: linux/amd64, linux/arm64
