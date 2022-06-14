@@ -108,5 +108,5 @@ storage:
           export internal=$(echo "$interfaces" | /usr/bin/jq -r --arg external "$external"  '. | map(select(.ifname != $external))[0] | .ifname')
           /usr/bin/nmcli connection add con-name r9s-outside type ethernet ifname $external ipv4.method auto ipv6.method ignore
           /usr/bin/nmcli connection up r9s-outside
-          /usr/bin/nmcli connection add con-name r9s-inside type ethernet ifname $internal ipv4.method manual ipv4.addresses 10.0.0.1/24 ipv6.method ignore
+          /usr/bin/nmcli connection add con-name r9s-inside type ethernet ifname $internal ipv4.method manual ipv4.addresses 192.168.64.1/24 ipv6.method ignore
           /usr/bin/nmcli connection up r9s-inside
