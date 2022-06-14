@@ -1,0 +1,10 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: routernetes-operator-sub
+  namespace: operators
+spec:
+  channel: alpha
+  name: routernetes-operator
+  source: operatorhubio-catalog
+  sourceNamespace: olm

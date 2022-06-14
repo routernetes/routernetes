@@ -94,6 +94,7 @@ storage:
           chmod +x /usr/local/bin/operator-sdk
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           /usr/local/bin/operator-sdk olm install
+          /usr/local/bin/kubectl apply -f https://raw.githubusercontent.com/routernetes/routernetes/main/k3s/olm_sub.yaml
     - path: /usr/local/bin/setup-interfaces.sh
       mode: 0755
       contents:
