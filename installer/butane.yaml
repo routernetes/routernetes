@@ -21,14 +21,7 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/usr/bin/rpm-ostree install --apply-live firewalld tuned https://github.com/k3s-io/k3s-selinux/releases/download/v1.1.stable.1/k3s-selinux-1.1-1.el8.noarch.rpm
-        ExecStart=/usr/bin/systemctl disable --now firewalld
-        ExecStart=/usr/bin/systemctl mask firewalld
-        ExecStart=/usr/bin/systemctl disable --now tuned
-        ExecStart=/usr/bin/systemctl mask tuned
-        ExecStart=/usr/bin/systemctl disable --now docker
-        ExecStart=/usr/bin/systemctl disable --now docker.socket
-        ExecStart=/usr/bin/systemctl restart dbus
+        ExecStart=/usr/local/bin/install-deps.sh
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
@@ -61,6 +54,20 @@ storage:
         inline: |
           # Enable SSH password login
           PasswordAuthentication yes
+    - path: /usr/local/bin/install-deps.sh
+      mode: 0755
+      contents:
+        inline: |
+          #!/bin/bash
+          set -e
+          /usr/bin/rpm-ostree install --apply-live firewalld tuned https://github.com/k3s-io/k3s-selinux/releases/download/v1.1.stable.1/k3s-selinux-1.1-1.el8.noarch.rpm
+          /usr/bin/systemctl disable --now firewalld
+          /usr/bin/systemctl mask firewalld
+          /usr/bin/systemctl disable --now tuned
+          /usr/bin/systemctl mask tuned
+          /usr/bin/systemctl disable --now docker
+          /usr/bin/systemctl disable --now docker.socket
+          /usr/bin/systemctl restart dbus
     - path: /usr/local/bin/install-k3s.sh
       mode: 0755
       contents:
