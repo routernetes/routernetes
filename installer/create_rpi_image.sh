@@ -15,7 +15,7 @@ losetup -P -f routernetes.img
 FCOSDISK=$(losetup -l -J | jq -r '.loopdevices[] | select(."back-file" | endswith("routernetes.img")) | .name')
 coreos-installer install --architecture=aarch64 -i /tmp/config.ign $FCOSDISK
 
-sleep 5
+sleep 10
 
 FCOSEFIPARTITION=$(lsblk $FCOSDISK -J -oLABEL,PATH | jq -r '.blockdevices[] | select(.label == "EFI-SYSTEM")'.path)
 mkdir /tmp/FCOSEFIpart
