@@ -78,7 +78,7 @@ storage:
           curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo
           /usr/bin/sleep 30
           /usr/local/bin/kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/latest/download/system-upgrade-controller.yaml
-          /usr/local/bin/kubectl wait deployment -n system-upgrade system-upgrade-controller --for condition=Available=True
+          /usr/local/bin/kubectl wait deployment -n system-upgrade system-upgrade-controller --for condition=Available=True --timeout=24h
           /usr/local/bin/kubectl apply -f https://raw.githubusercontent.com/routernetes/routernetes/main/k3s/upgrade-plan.yaml
           /usr/local/bin/install-olm.sh
     - path: /usr/local/bin/install-olm.sh
@@ -94,14 +94,11 @@ storage:
           chmod +x /usr/local/bin/operator-sdk
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           /usr/local/bin/operator-sdk olm install
-          /usr/bin/sleep 20
-          /usr/local/bin/kubectl wait --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
+          /usr/local/bin/kubectl wait --timeout=24h --for=jsonpath='{.status.connectionState.lastObservedState}'=READY -n olm catalogsource/operatorhubio-catalog
           /usr/local/bin/kubectl apply -f https://operatorhub.io/install/routernetes-operator.yaml
-          /usr/bin/sleep 5
-          /usr/local/bin/kubectl wait --for=jsonpath='{.status.state}'=AtLatestKnown -n operators sub/my-routernetes-operator
+          /usr/local/bin/kubectl wait --timeout=24h --for=jsonpath='{.status.state}'=AtLatestKnown -n operators sub/my-routernetes-operator
           csv=$(/usr/local/bin/kubectl get -n operators sub/my-routernetes-operator -o jsonpath='{.status.installedCSV}')
-          /usr/local/bin/kubectl wait --for=jsonpath='{.status.phase}'=Succeeded -n operators csv/$csv
-          /usr/bin/sleep 20
+          /usr/local/bin/kubectl wait --timeout=24h --for=jsonpath='{.status.phase}'=Succeeded -n operators csv/$csv
           /usr/local/bin/install-default-router.sh
     - path: /usr/local/bin/setup-loopback.sh
       mode: 0755
