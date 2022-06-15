@@ -94,9 +94,8 @@ storage:
           chmod +x /usr/local/bin/operator-sdk
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           /usr/local/bin/operator-sdk olm install
-          # /usr/local/bin/kubectl apply -f https://raw.githubusercontent.com/routernetes/routernetes/main/k3s/olm_sub.yaml
           /usr/bin/sleep 20
-          /usr/local/bin/operator-sdk run bundle quay.io/routernetes/routernetes-operator-bundle:v0.0.1 -n operators
+          /usr/local/bin/kubectl apply -f https://operatorhub.io/install/routernetes-operator.yaml
           /usr/bin/sleep 20
           /usr/local/bin/install-default-router.sh
     - path: /usr/local/bin/setup-loopback.sh
