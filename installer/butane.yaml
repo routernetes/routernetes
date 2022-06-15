@@ -74,7 +74,7 @@ storage:
         inline: |
           #!/bin/bash
           set -e
-          /usr/local/bin/setup-interfaces.sh
+          /usr/local/bin/setup-loopback.sh
           curl -sfL https://get.k3s.io | sh -s - --disable=traefik --disable=servicelb --flannel-backend=host-gw --flannel-iface=k3s-lo
           /usr/bin/sleep 30
           /usr/local/bin/kubectl apply -f https://github.com/rancher/system-upgrade-controller/releases/latest/download/system-upgrade-controller.yaml
@@ -94,8 +94,11 @@ storage:
           chmod +x /usr/local/bin/operator-sdk
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           /usr/local/bin/operator-sdk olm install
-          /usr/local/bin/kubectl apply -f https://raw.githubusercontent.com/routernetes/routernetes/main/k3s/olm_sub.yaml
-    - path: /usr/local/bin/setup-interfaces.sh
+          # /usr/local/bin/kubectl apply -f https://raw.githubusercontent.com/routernetes/routernetes/main/k3s/olm_sub.yaml
+          /usr/local/bin/operator-sdk run bundle quay.io/routernetes/routernetes-operator-bundle:v0.0.1 -n operators
+          /usr/bin/sleep 5
+          /usr/local/bin/install-default-router.sh
+    - path: /usr/local/bin/setup-loopback.sh
       mode: 0755
       contents:
         inline: |
@@ -104,10 +107,49 @@ storage:
           /usr/bin/systemctl start NetworkManager
           /usr/bin/nmcli connection add type dummy ifname k3s-lo ipv4.method manual ipv4.addresses 100.64.0.1/32 ipv6.method ignore connection.zone r9s-internal
           /usr/bin/nmcli connection up dummy-k3s-lo
+    - path: /usr/local/bin/install-default-router.sh
+      mode: 0755
+      contents:
+        inline: |
+          #!/bin/bash
+          set -e
           export interfaces=$(/usr/sbin/ip -details -json addr | /usr/bin/jq '. | map(select((.linkinfo == null) and (.link_type == "ether")))')
           export external=$(echo "$interfaces" | /usr/bin/jq -r '. | map(select(.addr_info[] | (.dynamic == true and .family == "inet")))[0] | .ifname')
           export internal=$(echo "$interfaces" | /usr/bin/jq -r --arg external "$external"  '. | map(select(.ifname != $external))[0] | .ifname')
-          /usr/bin/nmcli connection add con-name r9s-outside type ethernet ifname $external ipv4.method auto ipv6.method ignore
-          /usr/bin/nmcli connection up r9s-outside
-          /usr/bin/nmcli connection add con-name r9s-inside type ethernet ifname $internal ipv4.method manual ipv4.addresses 192.168.64.1/24 ipv6.method ignore
-          /usr/bin/nmcli connection up r9s-inside
+          mkdir -p /tmp/default-router
+          cd /tmp/default-router
+          curl -L -O https://raw.githubusercontent.com/routernetes/routernetes/main/k3s/default_router.yaml
+          cat <<EOF >patches.yaml
+          apiVersion: routernetes.net/v1alpha1
+          kind: Router
+          metadata:
+            name: router
+            namespace: routernetes
+          spec:
+            dns:
+              listenInterface: $internal
+            interfaces:
+              outside:
+                - name: $external
+                  type: ethernet
+                  ipv4:
+                    method: auto
+              inside:
+                - name: $internal
+                  type: ethernet
+                  ipv4:
+                    method: manual
+                    address: 192.168.64.1/24
+          EOF
+
+          cat <<EOF >kustomization.yaml
+          resources:
+          - default_router.yaml
+
+          patches:
+          - path: patches.yaml
+            target:
+              kind: Router
+          EOF
+
+          /usr/local/bin/kubectl apply -k .
