@@ -123,7 +123,7 @@ storage:
           apiVersion: routernetes.net/v1alpha1
           kind: Router
           metadata:
-            name: router
+            name: default-router
             namespace: routernetes
           spec:
             dns:
