@@ -134,17 +134,16 @@ storage:
             dns:
               listenInterface: $internal
             interfaces:
-              outside:
-                - name: $external
-                  type: ethernet
-                  ipv4:
-                    method: auto
-              inside:
-                - name: $internal
-                  type: ethernet
-                  ipv4:
-                    method: manual
-                    address: 192.168.64.1/24
+              - name: $external
+                type: ethernet
+                zone: outside
+                ipv4:
+                  method: auto
+              - name: $internal
+                type: ethernet
+                ipv4:
+                  method: manual
+                  address: 192.168.64.1/24
           EOF
 
           cat <<EOF >kustomization.yaml

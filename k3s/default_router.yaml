@@ -24,9 +24,7 @@ spec:
   firewall:
     outside:
       services: []
-  interfaces:
-    outside: []
-    inside: []
+  interfaces: []
   osUpdates:
     enabled: true
     timezone: UTC
