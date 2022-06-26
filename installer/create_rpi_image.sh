@@ -2,7 +2,7 @@
 set -e
 
 RELEASE=$(curl -sL https://builds.coreos.fedoraproject.org/streams/stable.json | jq -r '.architectures.aarch64.artifacts.metal.release'| cut -d. -f1)
-butane --pretty --strict -o /tmp/config.ign butane.yaml
+butane --pretty --strict -o /tmp/config.ign /etc/butane.yaml
 mkdir -p /tmp/RPi4boot/boot/efi/
 dnf install -y --downloadonly --release=$RELEASE --forcearch=aarch64 --destdir=/tmp/RPi4boot/ uboot-images-armv8 bcm283x-firmware bcm283x-overlays
 
