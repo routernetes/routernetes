@@ -1,4 +1,4 @@
-name: Publish rpi-installer
+name: rpi-installer
 
 on:
   release:

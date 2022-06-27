@@ -1,4 +1,4 @@
-name: Publish iso-installer
+name: iso-installer
 
 on:
   release:

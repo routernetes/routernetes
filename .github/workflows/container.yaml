@@ -1,4 +1,4 @@
-name: Publish container
+name: Build container
 
 on:
   release:
