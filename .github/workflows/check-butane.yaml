@@ -1,0 +1,20 @@
+name: Check Butane
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  check-butane:
+    runs-on: ubuntu-latest
+    container: registry.fedoraproject.org/fedora:latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install butane
+        run: |
+          dnf -y install butane
+
+      - name: Run butane
+        run: |
+          butane --pretty --strict ./installer/butane.yaml
