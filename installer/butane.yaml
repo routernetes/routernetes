@@ -60,7 +60,7 @@ storage:
         inline: |
           #!/bin/bash
           set -e
-          /usr/bin/rpm-ostree install --apply-live firewalld tuned https://github.com/k3s-io/k3s-selinux/releases/download/v1.1.stable.1/k3s-selinux-1.1-1.el8.noarch.rpm
+          /usr/bin/rpm-ostree install --apply-live firewalld tuned https://github.com/k3s-io/k3s-selinux/releases/download/v1.2.stable.2/k3s-selinux-1.2-2.el8.noarch.rpm
           /usr/bin/systemctl disable --now firewalld tuned
           /usr/bin/systemctl mask firewalld tuned
           /usr/bin/systemctl disable --now docker
