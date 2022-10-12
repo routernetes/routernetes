@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     container: registry.fedoraproject.org/fedora:latest
     steps:
-      - uses: actions/checkout@v3
-
       - name: Install butane
         run: |
-          dnf -y install butane
+          dnf -y install butane git
 
+      - uses: actions/checkout@v3
+      
       - name: Run butane
         run: |
           butane --pretty --strict ./installer/butane.yaml
