@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:36
+FROM registry.fedoraproject.org/fedora:37
 
 RUN dnf -y update && dnf -y install coreos-installer butane jq curl util-linux cpio rsync && dnf -y clean all
 
