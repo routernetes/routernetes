@@ -22,13 +22,13 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: routernetes
-          tags: latest ${{ github.ref_name }}
+          tags: latest ${{ github.ref_name }} id-${{ github.run_id }}
           containerfiles: |
             ./Containerfile
           platforms: linux/amd64, linux/arm64
 
       - name: Push To quay.io
-        if: ${{ github.event_name == 'release' }}
+        if: ${{ github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
         id: push-to-quay
         uses: redhat-actions/push-to-registry@v2
         with:
