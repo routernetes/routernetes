@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:37
+FROM registry.fedoraproject.org/fedora-minimal:38
 
 RUN microdnf -y update && microdnf -y install coreos-installer butane && microdnf -y clean all
 
