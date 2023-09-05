@@ -13,7 +13,7 @@ jobs:
         run: |
           dnf -y install butane git
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Run butane
         run: |
